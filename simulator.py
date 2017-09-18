@@ -3,6 +3,7 @@ import cuneyd
 import math
 import point
 
+
 #TO-DO: ADD ALPHA VALUES INSTEAD OF THICKNESS, ADD ADJUST_SIZE FUNCTION, ADD UI (SELECTING SPECIFIC CUNEYDS), ADD GRID
 
 class Simulator(object):
@@ -16,34 +17,36 @@ class Simulator(object):
         @param background_color (pygame.color object): color for the screen background
         @param grid_step (int): number of pixels separating grid points
         @param scale (int) : pixels per meter
-    '''
-    def __init__(self, width = 900, height = 900, background_color = (0,0,0), grid_step = 10, scale = 100):
-
+        @param m (map object) : the map to test cuneyt_bots
+        '''
+    def __init__(self, width = 900, height = 900, background_color = (210,210,210), grid_step = 10, scale = 100, m = None):
         self.w = width
         self.h = height
         
         self.grid_step = grid_step
 
         self.background_color = background_color
-
-	self.screen = pygame.display.set_mode((self.w, self.h))
-	self.screen.fill(background_color)
+        self.screen = pygame.display.set_mode((self.w, self.h))
+        self.screen.fill(background_color)
 	
         self.cuneyds = []
-	pygame.font.init() 
-	self.def_font = pygame.font.SysFont('Ariel', 25)
-	pygame.display.update()
+        pygame.font.init() 
+        self.def_font = pygame.font.SysFont('Ariel', 25)
+        pygame.display.update()
+        self.m = m
 
     def check_quit(self):
-	for event in pygame.event.get():
-	    if event.type == pygame.QUIT:
-		return False
-	return True
+    	for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+    	return True
 
     def update_screen(self):
     	self.screen.fill(self.background_color)
         self.draw_grid()
     	self.draw_points()
+        if self.m is not None:
+            self.draw_map()
     	self.draw_cuneyds()
     	self.legand()
     	pygame.display.update()
@@ -77,19 +80,17 @@ class Simulator(object):
 
     def draw_cuneyds(self):
     	for i in range(len(self.cuneyds)):
-	    self.draw_cuneyd(self.cuneyds[i],self.colors[i%len(self.colors)])
-	pass
+            self.draw_cuneyd(self.cuneyds[i],self.colors[i%len(self.colors)])
 
     def draw_points(self):
 	#draw all point with respective color
-	r = 5
-	thickness = 0
-	for i in range(len(self.cuneyds)):
-	    for point in self.cuneyds[i].points:
+    	r = 5
+    	thickness = 0
+    	for i in range(len(self.cuneyds)):
+    	    for point in self.cuneyds[i].points:
                 x = point[0] + self.w // 2
                 y = self.h // 2 - point[1]
-                
-		pygame.draw.circle(self.screen, self.colors[i%len(self.colors)], (x,y), r, thickness)
+                pygame.draw.circle(self.screen, self.colors[i%len(self.colors)], (x,y), r, thickness)
 
     def draw_grid(self):
         for xi in xrange(-self.w//2, self.w//2, self.grid_step):
@@ -116,12 +117,17 @@ class Simulator(object):
     	y_pos = 0
     	for i in range(len(self.cuneyds)):
             text = self.def_font.render('ID: '+str(self.cuneyds[i].ID), False, self.colors[i%len(self.colors)])
-	    self.screen.blit(text,(0,y_pos))
-	    y_pos+=20
+    	    self.screen.blit(text,(0,y_pos))
+    	    y_pos+=20
             pos_str = str((self.cuneyds[i].x,self.cuneyds[i].y,self.cuneyds[i].t,self.cuneyds[i].p))
-	    text = self.def_font.render('x,y,t,p: '+pos_str, False, self.colors[i%len(self.colors)])
-	    self.screen.blit(text,(0,y_pos))
-	    y_pos+=30
+    	    text = self.def_font.render('x,y,t,p: '+pos_str, False, self.colors[i%len(self.colors)])
+    	    self.screen.blit(text,(0,y_pos))
+    	    y_pos+=30
+
+    def draw_map(self):
+        #takes a map m
+        for shape in self.m.walls:
+            pygame.draw.lines(self.screen, self.m.color, True, shape, self.m.thickness)
 
     def adjust_size(self):
 	#if map is too small for all cuneyds, zoom out

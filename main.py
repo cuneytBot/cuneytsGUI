@@ -1,8 +1,14 @@
+import sys
+sys.path.append('../cuneytSimulator')
+print(sys.path)
 import simulator
 import cuneyd
 import time
+import cuneyd_bot
+import maps
 
-sim = simulator.Simulator(background_color = (210,210,210))
+map1 = maps.Maps(walls = 'custom2')
+sim = simulator.Simulator(m = map1)
 sim.create_cuneyd(-100,200,3,"baban",0.8)
 sim.create_cuneyd(200,-150,1.6,"anan",1)
 sim.create_cuneyd(242,23,2.5,"kayinvaliden",0.2)
@@ -19,13 +25,15 @@ baldiz.add_point(134,170,2,100)
 baldiz.add_point(172,265,2,100)
 baldiz.add_point(125,243,2,1)
 
+
+
 print sim.cuneyds[0]
 print cuneyd.Cuneyd.id_list
 
 x = 0
 t = 0
 while sim.check_quit():
-	x+=0.5
-	t+=0.1
-	baldiz.set(x,baldiz.y,t,baldiz.ID,baldiz.p)
-	sim.update_screen()
+    x+=0.5
+    t+=0.1
+    baldiz.set(x,baldiz.y,t,baldiz.ID,baldiz.p)
+    sim.update_screen()
