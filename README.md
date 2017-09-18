@@ -1,2 +1,2 @@
-# cuneytsGUI
-GUI for multiple Cuneyts on a graph, #fasterthanrealtime visualization of where your cuneyts are
+# CuneydsUI
+A Fancy graphical interface to watch your Cuneyts (or simulators) in #FasterThanRealTime
