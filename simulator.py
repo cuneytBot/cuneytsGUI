@@ -58,9 +58,12 @@ class Simulator(object):
     	self.cuneyds.append(cuneyd)
 
     def update_cuneyd(self, ID, x = None, y = None, t = None, N_ID = None, p = 0.5):
-        cuneyd = next(cuneyd for cuneyd in self.cuneyds if str(cuneyd.ID) == str(ID))
-        cuneyd.set(x,y,t,N_ID,p)
-        return str(cuneyd)
+        try:
+            cuneyd = next(cuneyd for cuneyd in self.cuneyds if str(cuneyd.ID) == str(ID))
+            cuneyd.set(x,y,t,N_ID,p)
+        except Exception as e:
+            print "find next exception: " + repr(e)
+        
 
     def print_cuneyd(self, ID):
         return str(next(cuneyd for cuneyd in self.cuneyds if str(cuneyd.ID) == str(ID)))

@@ -39,11 +39,13 @@ def create_cuneyd():
 @app.route('/update_cuneyd', methods = ["POST"])
 def update_cuneyd():
     ups = request.json
+    print ups
     sim.update_cuneyd(ups["ID"], ups.get('x',None), 
                                  ups.get('y',None),
                                  ups.get('t',None),
                                  ups.get('N_ID', None),
                                  ups.get('p', None))
+    print "here"
     sim.update_screen()
     return "NYI"
 
